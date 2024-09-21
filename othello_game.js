@@ -8,7 +8,8 @@ const cellSize = 65;
 const cellBorderRadius = 2.5;
 const gap = 3;
 
-var pieces = [
+// Initial pieces setup (0: empty, 1: black, 2: white).
+let pieces = [
 	[0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0],
@@ -41,13 +42,14 @@ function drawGameBoard() {
 			cell.style.height = cellSize + "px";
 			cell.style.borderRadius = cellBorderRadius + "px";
 			cell.style.backgroundColor = "var(--green)";
+			cell.style.boxShadow = "inset 0 0 5px 0 rgba(0, 0, 0, 0.5)";
 
 			gameBoardLayer.appendChild(cell);
 		}
 	}
 }
 
-// Add corner markers to the the game board.
+// Draw corner markers to the the game board.
 function drawCornerMarkers() {
 	const cornerMarkerPositions = [
 		{ top: 2, left: 2 },
@@ -70,14 +72,14 @@ function drawCornerMarkers() {
 	});
 }
 
-//
+// Draw pieces on the board.
 function drawPieces() {
 	piecesLayer.innerHTML = "";
 
 	for (let row = 0; row < 8; row++) {
 		for (let column = 0; column < 8; column++) {
-			//
-			let pieceState = pieces[row][column];
+			// Get the state of the piece (0: empty, 1: black, 2: white).
+			const pieceState = pieces[row][column];
 
 			if (pieceState == 0) {
 				continue;
@@ -89,14 +91,14 @@ function drawPieces() {
 				piece.style.left = ((cellSize + gap) * column) + gap + 5 + "px";
 				piece.style.width = (cellSize - 10) + "px";
 				piece.style.height = (cellSize - 10) + "px";
-				piece.style.borderRadius = "50%"
-				piece.style.boxShadow = "0 2.5px 5px rgba(0, 0, 0, 0.5)"
+
+				piece.classList.add("piece");
 
 				if (pieceState == 1) {
-					piece.style.backgroundColor = "var(--black)"
+					piece.classList.add("black");
 				}
 				else if (pieceState == 2) {
-					piece.style.backgroundColor = "var(--white)"
+					piece.classList.add("white");
 				}
 
 				piecesLayer.appendChild(piece);

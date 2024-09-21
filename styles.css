@@ -70,6 +70,17 @@ header {
     position: relative;
     border-radius: 5px;
     outline: 10px solid var(--black);
+    box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.5);
+}
+
+#othello_game_container::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    box-shadow: inset 0 0 25px 0 rgba(0, 0, 0, 1);
 }
 
 #game_board_layer {
@@ -79,6 +90,22 @@ header {
     width: 100%;
     height: 100%;
     background-color: var(--black);
+}
+
+.piece {
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: 0 2.5px 5px rgba(0, 0, 0, 0.5);
+}
+
+.piece.black {
+    border: 0.5px solid #3c3c3c;
+    background: radial-gradient(circle at 30% 30%, #333333, var(--black) 70%);
+}
+
+.piece.white {
+    border: 1px solid #3c3c3c;
+    background: radial-gradient(circle at 30% 30%, var(--white), #cccccc 70%);
 }
 
 /********** FOOTER **********/
