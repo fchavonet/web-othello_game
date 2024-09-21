@@ -4,6 +4,7 @@
     --footer_height: 50px;
     --black: #000000;
     --white: #ffffff;
+    --green: #008a61;
 }
 
 /********** RESET CSS **********/
@@ -48,8 +49,6 @@ h1 {
     align-items: center;
     font-size: 1.5rem;
     text-transform: uppercase;
-    color: var(--white);
-    background-color: var(--black);
 }
 
 /********** HEADER **********/
@@ -69,9 +68,11 @@ header {
 /********** OTHELLO GAME **********/
 #othello_game_container {
     position: relative;
+    border-radius: 5px;
+    outline: 10px solid var(--black);
 }
 
-#board_layer {
+#game_board_layer {
     position: absolute;
     top: 0;
     left: 0;
