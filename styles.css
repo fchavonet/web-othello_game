@@ -5,6 +5,7 @@
     --black: #000000;
     --white: #ffffff;
     --green: #008a61;
+    --background_color: #f0f0f0;
 }
 
 /********** RESET CSS **********/
@@ -33,7 +34,7 @@ main {
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
-    background-color: #f0f0f0;
+    background-color: var(--background_color);
 }
 
 h1 {
@@ -81,6 +82,7 @@ header {
     bottom: 0;
     left: 0;
     box-shadow: inset 0 0 25px 0 rgba(0, 0, 0, 1);
+    pointer-events: none;
 }
 
 #game_board_layer {

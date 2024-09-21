@@ -8,6 +8,9 @@ const cellSize = 65;
 const cellBorderRadius = 2.5;
 const gap = 3;
 
+// Keeps track of the current player's turn (1: black, 2: white).
+let playerTurn = 1;
+
 // Initial pieces setup (0: empty, 1: black, 2: white).
 let pieces = [
 	[0, 0, 0, 0, 0, 0, 0, 0],
@@ -43,6 +46,9 @@ function drawGameBoard() {
 			cell.style.borderRadius = cellBorderRadius + "px";
 			cell.style.backgroundColor = "var(--green)";
 			cell.style.boxShadow = "inset 0 0 5px 0 rgba(0, 0, 0, 0.5)";
+
+			// Attach click event to each cell.
+			cell.setAttribute("onClick", "clickedCell(" + row + ", " + column + ")");
 
 			gameBoardLayer.appendChild(cell);
 		}
@@ -105,4 +111,18 @@ function drawPieces() {
 			}
 		}
 	}
+}
+
+// Handle cell click event and toggle player turn.
+function clickedCell(row, column) {
+	pieces[row][column] = playerTurn;
+
+	if (playerTurn == 1) {
+		playerTurn = 2;
+	}
+	else if (playerTurn = 2) {
+		playerTurn = 1;
+	}
+
+	drawPieces();
 }
