@@ -42,14 +42,21 @@ h1 {
 }
 
 .score_container {
-    width: 250px;
     padding: 25px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 15px;
     font-size: 1.5rem;
     text-transform: uppercase;
+    border-radius: 25px;
+    box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.2);
+}
+
+.score {
+    font-size: 5rem;
+    font-weight: 900;
 }
 
 /********** HEADER **********/
@@ -95,7 +102,8 @@ header {
 }
 
 .piece {
-    position: absolute;
+    width: 65px;
+    height: 65px;
     border-radius: 50%;
     box-shadow: 0 2.5px 5px rgba(0, 0, 0, 0.5);
 }
@@ -106,7 +114,7 @@ header {
 }
 
 .piece.white {
-    border: 1px solid #3c3c3c;
+    border: 1px solid #c9c9c9;
     background: radial-gradient(circle at 30% 30%, var(--white), #cccccc 70%);
 }
 

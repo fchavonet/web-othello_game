@@ -31,6 +31,7 @@ window.onload = function () {
 	drawGameBoard();
 	drawCornerMarkers();
 	drawPieces();
+	updateScore()
 }
 
 // Create and position each cell of the game board.
@@ -125,4 +126,29 @@ function clickedCell(row, column) {
 	}
 
 	drawPieces();
+	updateScore()
+}
+
+// Update the score based on the current state of the board.
+function updateScore() {
+	const blackScrore = document.getElementById("black_score");
+	const whiteScrore = document.getElementById("white_score");
+
+	let black = 0;
+	let white = 0;
+
+	for (let row = 0; row < 8; row++) {
+		for (let column = 0; column < 8; column++) {
+			const pieceState = pieces[row][column];
+
+			if (pieceState == 1) {
+				black += 1; // Count black pieces.
+				blackScrore.innerHTML = black;
+			}
+			else if (pieceState == 2) {
+				white += 1; // Count white pieces.
+				whiteScrore.innerHTML = white;
+			}
+		}
+	}
 }
