@@ -42,16 +42,16 @@ h1 {
 }
 
 .score_container {
+    width: 150px;
     padding: 25px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 15px;
+    gap: 25px;
     font-size: 1.5rem;
     text-transform: uppercase;
     border-radius: 25px;
-    box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.2);
 }
 
 .score {
