@@ -147,7 +147,10 @@ function clickedCell(row, column) {
 
 	drawPieces();
 	drawValidMove();
-	updateScore();
+
+	const scores = updateScore();
+
+	gameOver(scores.black, scores.white);
 }
 
 // Check if the current move is valid.
@@ -239,9 +242,9 @@ function drawValidMove() {
 
 			if (valueAtPosition == 0 && isValidMove(row, column)) {
 				cell.style.cursor = "pointer";
-				
+
 				const validMoveMarker = document.createElement("div");
-				
+
 				validMoveMarker.style.position = "absolute";
 				validMoveMarker.style.top = ((cellSize + gap) * row) + gap + 27.5 + "px";
 				validMoveMarker.style.left = ((cellSize + gap) * column) + gap + 27.5 + "px";
@@ -249,7 +252,7 @@ function drawValidMove() {
 				validMoveMarker.style.height = (cellSize - 55) + "px";
 				validMoveMarker.style.borderRadius = "50%";
 				validMoveMarker.style.cursor = "pointer";
-				
+
 				validMoveMarker.addEventListener("click", function () {
 					clickedCell(row, column);
 				});
@@ -291,4 +294,59 @@ function updateScore() {
 
 	blackScore.innerHTML = black;
 	whiteScore.innerHTML = white;
+
+	return { black, white }
+}
+
+// Check if the game is over based on available moves and scores.
+function gameOver(black, white) {
+	let blackCanMove = false;
+	let whiteCanMove = false;
+
+	for (let row = 0; row < 8; row++) {
+		for (let column = 0; column < 8; column++) {
+			if (piecesGrid[row][column] == 0) {
+				if (playerTurn == 1 && isValidMove(row, column)) {
+					blackCanMove = true;
+				}
+
+				if (playerTurn == 2 && isValidMove(row, column)) {
+					whiteCanMove = true;
+				}
+			}
+		}
+	}
+
+	if (!blackCanMove && !whiteCanMove) {
+		// Determine the winner.
+		if (black > white) {
+			alert("The winner is the player with the black pieces!")
+		} else if (white > black) {
+			alert("The winner is the player with the white pieces!")
+		} else {
+			alert("It's a Tie!")
+		}
+
+		restartGame();
+	}
+}
+
+// Restart the game to the initial state and redraw the board.
+function restartGame() {
+	piecesGrid = [
+		[0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 2, 1, 0, 0, 0],
+		[0, 0, 0, 1, 2, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 0, 0]
+	];
+
+	playerTurn = 1;
+
+	drawPieces();
+	drawValidMove();
+	updateScore();
 }
