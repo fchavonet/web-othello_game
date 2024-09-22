@@ -2,6 +2,7 @@
 const othelloGameContainer = document.getElementById("othello_game_container");
 const gameBoardLayer = document.getElementById("game_board_layer");
 const piecesLayer = document.getElementById("pieces_layer");
+const validMoveLayer = document.getElementById("valid_move_layer");
 
 // Global variables.
 const cellSize = 65;
@@ -31,6 +32,7 @@ window.onload = function () {
 	drawGameBoard();
 	drawCornerMarkers();
 	drawPieces();
+	drawValidMove();
 	updateScore()
 }
 
@@ -39,6 +41,7 @@ function drawGameBoard() {
 	for (let row = 0; row < 8; row++) {
 		for (let column = 0; column < 8; column++) {
 			const cell = document.createElement("div");
+
 			cell.style.position = "absolute";
 			cell.style.top = ((cellSize + gap) * row) + gap + "px";
 			cell.style.left = ((cellSize + gap) * column) + gap + "px";
@@ -67,6 +70,7 @@ function drawCornerMarkers() {
 
 	cornerMarkerPositions.forEach(position => {
 		const cornerMarker = document.createElement("div");
+
 		cornerMarker.style.position = "absolute";
 		cornerMarker.style.top = ((cellSize + gap) * position.top) - (gap / 2) - 3 + "px";
 		cornerMarker.style.left = ((cellSize + gap) * position.left) - (gap / 2) - 3 + "px";
@@ -93,6 +97,7 @@ function drawPieces() {
 			}
 			else {
 				const piece = document.createElement("div");
+
 				piece.style.position = "absolute";
 				piece.style.top = ((cellSize + gap) * row) + gap + 5 + "px";
 				piece.style.left = ((cellSize + gap) * column) + gap + 5 + "px";
@@ -139,7 +144,8 @@ function clickedCell(row, column) {
 	}
 
 	drawPieces();
-	updateScore()
+	drawValidMove();
+	updateScore();
 }
 
 // Check if the current move is valid.
@@ -212,6 +218,40 @@ function flipPieces(affectedPieces) {
 		}
 		else {
 			piecesGrid[piecesPosition.row][piecesPosition.column] = 1;
+		}
+	}
+}
+
+//
+function drawValidMove() {
+	validMoveLayer.innerHTML = "";
+
+	for (let row = 0; row < 8; row++) {
+		for (let column = 0; column < 8; column++) {
+			const valueAtPosition = piecesGrid[row][column];
+
+			if (valueAtPosition == 0 && isValidMove(row, column)) {
+				const validMoveMarker = document.createElement("div");
+
+				validMoveMarker.style.position = "absolute";
+				validMoveMarker.style.top = ((cellSize + gap) * row) + gap + 27.5 + "px";
+				validMoveMarker.style.left = ((cellSize + gap) * column) + gap + 27.5 + "px";
+				validMoveMarker.style.width = (cellSize - 55) + "px";
+				validMoveMarker.style.height = (cellSize - 55) + "px";
+				validMoveMarker.style.borderRadius = "50%";
+
+				validMoveMarker.setAttribute("onClick", "clickedCell(" + row + ", " + column + ")");
+
+				if (playerTurn == 1) {
+					validMoveMarker.style.border = "2px solid var(--black)";
+				}
+
+				if (playerTurn == 2) {
+					validMoveMarker.style.border = "2px solid var(--white)";
+				}
+
+				validMoveLayer.appendChild(validMoveMarker);
+			}
 		}
 	}
 }
