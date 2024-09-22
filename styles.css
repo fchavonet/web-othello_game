@@ -2,6 +2,7 @@
 :root {
     --header_height: 75px;
     --footer_height: 50px;
+    --gap: 25px;
     --black: #000000;
     --white: #ffffff;
     --green: #008a61;
@@ -41,24 +42,6 @@ h1 {
     font-size: 2.5rem;
 }
 
-.score_container {
-    width: 150px;
-    padding: 25px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 25px;
-    font-size: 1.5rem;
-    text-transform: uppercase;
-    border-radius: 25px;
-}
-
-.score {
-    font-size: 5rem;
-    font-weight: 900;
-}
-
 /********** HEADER **********/
 
 header {
@@ -73,12 +56,38 @@ header {
     background-color: var(--black);
 }
 
+header button {
+    height: 25px;
+    padding: 0px 15px;
+    border: none;
+    border-radius: 25px;
+    outline: none;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    color: var(--black);
+    background-color: var(--white);
+    cursor: pointer;
+}
+
+#logo_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: var(--gap);
+}
+
+#logo_container img {
+    width: 25px;
+    height: 25px;
+}
+
 /********** OTHELLO GAME **********/
 #othello_game_container {
     position: relative;
     border-radius: 5px;
     outline: 10px solid var(--black);
-    box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.5);
+    box-shadow: 25px 25px 35px 0 rgba(0, 0, 0, 0.5);
 }
 
 #othello_game_container::after {
@@ -105,7 +114,7 @@ header {
     width: 65px;
     height: 65px;
     border-radius: 50%;
-    box-shadow: 0 2.5px 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 2.5px 2.5px 5px rgba(0, 0, 0, 0.5);
 }
 
 .piece.black {
@@ -118,10 +127,33 @@ header {
     background: radial-gradient(circle at 30% 30%, var(--white), #cccccc 70%);
 }
 
+.score_container {
+    width: 150px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--gap);
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    border-radius: 25px;
+}
+
+.score {
+    font-size: 5rem;
+    font-weight: 900;
+}
+
 /********** FOOTER **********/
 
 footer {
     width: 100%;
     height: var(--footer_height);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: var(--white);
     background-color: var(--black);
 }

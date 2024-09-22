@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Othello Game</title>
+    <link rel="icon" type="image/x-icon" href="./resources/images/favicon.ico">
 
     <link rel="stylesheet" href="./styles.css">
 
@@ -15,7 +17,15 @@
 <body>
     <!-- HEADER -->
     <header>
-        <h1>Othello Game</h1>
+        <div id="logo_container">
+            <img src="./resources/images/logo-othello_game.png" alt="Othello Game logotype.">
+            <h1>Othello Game</h1>
+        </div>
+
+        <nav>
+            <button
+                onclick="if (confirm('Are you sure you want to restart the game?')) { restartGame(); }">Restart</button>
+        </nav>
     </header>
 
     <!-- OTHELLO GAME -->
@@ -39,7 +49,7 @@
 
     <!-- FOOTER -->
     <footer>
-
+        <p>A minute to learn... A lifetime to master!</p>
     </footer>
 </body>
 
