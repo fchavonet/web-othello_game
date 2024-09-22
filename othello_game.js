@@ -226,24 +226,30 @@ function flipPieces(affectedPieces) {
 	}
 }
 
-//
+// Highlight valid moves for the current player.
 function drawValidMove() {
 	validMoveLayer.innerHTML = "";
 
 	for (let row = 0; row < 8; row++) {
 		for (let column = 0; column < 8; column++) {
+			const cell = gameBoardLayer.children[row * 8 + column];
 			const valueAtPosition = piecesGrid[row][column];
 
-			if (valueAtPosition == 0 && isValidMove(row, column)) {
-				const validMoveMarker = document.createElement("div");
+			cell.style.cursor = "default";
 
+			if (valueAtPosition == 0 && isValidMove(row, column)) {
+				cell.style.cursor = "pointer";
+				
+				const validMoveMarker = document.createElement("div");
+				
 				validMoveMarker.style.position = "absolute";
 				validMoveMarker.style.top = ((cellSize + gap) * row) + gap + 27.5 + "px";
 				validMoveMarker.style.left = ((cellSize + gap) * column) + gap + 27.5 + "px";
 				validMoveMarker.style.width = (cellSize - 55) + "px";
 				validMoveMarker.style.height = (cellSize - 55) + "px";
 				validMoveMarker.style.borderRadius = "50%";
-
+				validMoveMarker.style.cursor = "pointer";
+				
 				validMoveMarker.addEventListener("click", function () {
 					clickedCell(row, column);
 				});
