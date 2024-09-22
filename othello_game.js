@@ -52,7 +52,9 @@ function drawGameBoard() {
 			cell.style.boxShadow = "inset 0 0 5px 0 rgba(0, 0, 0, 0.5)";
 
 			// Attach click event to each cell.
-			cell.setAttribute("onClick", "clickedCell(" + row + ", " + column + ")");
+			cell.addEventListener("click", function () {
+				clickedCell(row, column);
+			});
 
 			gameBoardLayer.appendChild(cell);
 		}
@@ -127,7 +129,7 @@ function clickedCell(row, column) {
 	}
 
 	// Proceed if the move is valid.
-	if (isValidMove(row, column) == true) {
+	if (isValidMove(row, column)) {
 		const affectedPieces = getAffectedPieces(row, column);
 		flipPieces(affectedPieces);
 
@@ -192,7 +194,9 @@ function getAffectedPieces(row, column) {
 
 			// Valid line, flip pieces.
 			if (valueAtPosition == playerTurn) {
-				affectedPieces.push(...couldBeAffected);
+				if (couldBeAffected.length > 0) {
+					affectedPieces.push(...couldBeAffected);
+				}
 				break;
 			}
 
@@ -240,14 +244,16 @@ function drawValidMove() {
 				validMoveMarker.style.height = (cellSize - 55) + "px";
 				validMoveMarker.style.borderRadius = "50%";
 
-				validMoveMarker.setAttribute("onClick", "clickedCell(" + row + ", " + column + ")");
+				validMoveMarker.addEventListener("click", function () {
+					clickedCell(row, column);
+				});
 
 				if (playerTurn == 1) {
-					validMoveMarker.style.border = "2px solid var(--black)";
+					validMoveMarker.style.border = "1.5px solid var(--black)";
 				}
 
 				if (playerTurn == 2) {
-					validMoveMarker.style.border = "2px solid var(--white)";
+					validMoveMarker.style.border = "1.5px solid var(--white)";
 				}
 
 				validMoveLayer.appendChild(validMoveMarker);
@@ -270,12 +276,13 @@ function updateScore() {
 
 			if (pieceState == 1) {
 				black += 1; // Count black pieces.
-				blackScore.innerHTML = black;
 			}
 			else if (pieceState == 2) {
 				white += 1; // Count white pieces.
-				whiteScore.innerHTML = white;
 			}
 		}
 	}
+
+	blackScore.innerHTML = black;
+	whiteScore.innerHTML = white;
 }
