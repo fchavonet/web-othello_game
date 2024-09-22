@@ -12,7 +12,7 @@ const gap = 3;
 let playerTurn = 1;
 
 // Initial pieces setup (0: empty, 1: black, 2: white).
-let pieces = [
+let piecesGrid = [
 	[0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0],
@@ -86,7 +86,7 @@ function drawPieces() {
 	for (let row = 0; row < 8; row++) {
 		for (let column = 0; column < 8; column++) {
 			// Get the state of the piece (0: empty, 1: black, 2: white).
-			const pieceState = pieces[row][column];
+			const pieceState = piecesGrid[row][column];
 
 			if (pieceState == 0) {
 				continue;
@@ -116,38 +116,125 @@ function drawPieces() {
 
 // Handle cell click event and toggle player turn.
 function clickedCell(row, column) {
-	pieces[row][column] = playerTurn;
-
-	if (playerTurn == 1) {
-		playerTurn = 2;
+	// Prevent placing on occupied cell.
+	if (piecesGrid[row][column] != 0) {
+		return;
 	}
-	else if (playerTurn = 2) {
-		playerTurn = 1;
+
+	// Proceed if the move is valid.
+	if (isValidMove(row, column) == true) {
+		const affectedPieces = getAffectedPieces(row, column);
+		flipPieces(affectedPieces);
+
+		// Place piece for current player.
+		piecesGrid[row][column] = playerTurn;
+
+		// Switch player turn.
+		if (playerTurn == 1) {
+			playerTurn = 2;
+		}
+		else if (playerTurn == 2) {
+			playerTurn = 1;
+		}
 	}
 
 	drawPieces();
 	updateScore()
 }
 
+// Check if the current move is valid.
+function isValidMove(row, column) {
+	const affectedPieces = getAffectedPieces(row, column);
+
+	if (affectedPieces.length == 0) {
+		return false;
+	}
+	else {
+		return true;
+	}
+}
+
+// Get pieces affected (to be flipped) by the move.
+function getAffectedPieces(row, column) {
+	const directions = [
+		{ rowOffset: -1, columnOffset: 0 },  // Up.
+		{ rowOffset: 0, columnOffset: 1 },   // Right.
+		{ rowOffset: 1, columnOffset: 0 },   // Bottom.
+		{ rowOffset: 0, columnOffset: -1 },  // Left.
+		{ rowOffset: -1, columnOffset: 1 },  // Upper-right diagonal.
+		{ rowOffset: 1, columnOffset: 1 },   // Bottom-right diagonal.
+		{ rowOffset: -1, columnOffset: -1 }, // Upper-left diagonal.
+		{ rowOffset: 1, columnOffset: -1 }   // Bottom-left diagonal.
+	];
+
+	const affectedPieces = [];
+
+	// Check each direction for flippable pieces.
+	for (let direction of directions) {
+		let couldBeAffected = [];
+		let rowIterator = row + direction.rowOffset;
+		let columnIterator = column + direction.columnOffset;
+
+		// Traverse in the direction until an edge or invalid piece is found.
+		while (rowIterator >= 0 && rowIterator < 8 && columnIterator >= 0 && columnIterator < 8) {
+			const valueAtPosition = piecesGrid[rowIterator][columnIterator];
+
+			// Empty cell, stop.
+			if (valueAtPosition == 0) {
+				break;
+			}
+
+			// Valid line, flip pieces.
+			if (valueAtPosition == playerTurn) {
+				affectedPieces.push(...couldBeAffected);
+				break;
+			}
+
+			// Add opponent piece to list.
+			couldBeAffected.push({ row: rowIterator, column: columnIterator });
+
+			// Continue in the same direction.
+			rowIterator += direction.rowOffset;
+			columnIterator += direction.columnOffset;
+		}
+	}
+
+	return affectedPieces;
+}
+
+// Flip pieces for the current move.
+function flipPieces(affectedPieces) {
+	for (let i = 0; i < affectedPieces.length; i++) {
+		const piecesPosition = affectedPieces[i];
+
+		if (piecesGrid[piecesPosition.row][piecesPosition.column] == 1) {
+			piecesGrid[piecesPosition.row][piecesPosition.column] = 2;
+		}
+		else {
+			piecesGrid[piecesPosition.row][piecesPosition.column] = 1;
+		}
+	}
+}
+
 // Update the score based on the current state of the board.
 function updateScore() {
-	const blackScrore = document.getElementById("black_score");
-	const whiteScrore = document.getElementById("white_score");
+	const blackScore = document.getElementById("black_score");
+	const whiteScore = document.getElementById("white_score");
 
 	let black = 0;
 	let white = 0;
 
 	for (let row = 0; row < 8; row++) {
 		for (let column = 0; column < 8; column++) {
-			const pieceState = pieces[row][column];
+			const pieceState = piecesGrid[row][column];
 
 			if (pieceState == 1) {
 				black += 1; // Count black pieces.
-				blackScrore.innerHTML = black;
+				blackScore.innerHTML = black;
 			}
 			else if (pieceState == 2) {
 				white += 1; // Count white pieces.
-				whiteScrore.innerHTML = white;
+				whiteScore.innerHTML = white;
 			}
 		}
 	}
