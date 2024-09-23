@@ -25,7 +25,7 @@
 /********** GENERAL **********/
 body {
     width: 100%;
-    height: 100vh;
+    height: 100dvh;
 }
 
 main {
@@ -40,6 +40,14 @@ main {
 
 h1 {
     font-size: 2.5rem;
+}
+
+/* General responsive */
+@media (max-width: 768px) {
+    main {
+        flex-direction: column;
+        justify-content: center;
+    }
 }
 
 /********** HEADER **********/
@@ -80,6 +88,17 @@ header button {
 #logo_container img {
     width: 25px;
     height: 25px;
+}
+
+/* Header responsive */
+@media (max-width: 768px) {
+    header {
+        justify-content: center;
+    }
+
+    nav {
+        display: none;
+    }
 }
 
 /********** OTHELLO GAME **********/
@@ -143,6 +162,17 @@ header button {
 .score {
     font-size: 5rem;
     font-weight: 900;
+}
+
+/* Othello game responsive */
+@media (max-width: 768px) {
+    #othello_game_container {
+        transform: scale(0.6);
+    }
+
+    .score_container {
+        display: none;
+    }
 }
 
 /********** FOOTER **********/
