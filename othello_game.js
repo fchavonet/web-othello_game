@@ -4,10 +4,13 @@ const gameBoardLayer = document.getElementById("game_board_layer");
 const piecesLayer = document.getElementById("pieces_layer");
 const validMoveLayer = document.getElementById("valid_move_layer");
 
-// Global variables.
-const cellSize = 65;
-const cellBorderRadius = 2.5;
-const gap = 3;
+// Variables.
+let cellSize;
+let cellBorderRadius;
+let cellGap;
+let cornerMarkerSize;
+let validMoveMarkerSize;
+let validMoveMarkerBorderRadius;
 
 // Keeps track of the current player's turn (1: black, 2: white).
 let playerTurn = 1;
@@ -24,16 +27,51 @@ let piecesGrid = [
 	[0, 0, 0, 0, 0, 0, 0, 0]
 ]
 
-// Set container size and initialize board on window load.
-window.onload = function () {
-	othelloGameContainer.style.minWidth = (cellSize * 8) + (gap * 9) + "px";
-	othelloGameContainer.style.minHeight = (cellSize * 8) + (gap * 9) + "px";
+function updateBoardSize(cellSize) {
+	cellBorderRadius = cellSize / 25;
+	cellGap = cellSize / 20;
+	cornerMarkerSize = cellSize / 5;
+	validMoveMarkerSize = cellSize / 5;
+	validMoveMarkerBorderRadius = cellSize / 30;
+}
 
+function resizeAndRedrawBoard() {
+	const windowWidth = window.innerWidth;
+
+	if (windowWidth < 576) {
+		cellSize = 35;
+		updateBoardSize(cellSize);
+	}
+	else if (windowWidth < 768) {
+		cellSize = 50
+		updateBoardSize(cellSize);
+	}
+	else {
+		cellSize = 65;
+		updateBoardSize(cellSize);
+	}
+
+	//
+	othelloGameContainer.style.minWidth = (cellSize * 8) + (cellGap * 9) + "px";
+	othelloGameContainer.style.minHeight = (cellSize * 8) + (cellGap * 9) + "px";
+
+	//
+	gameBoardLayer.innerHTML = ""
+
+	//
 	drawGameBoard();
 	drawCornerMarkers();
 	drawPieces();
 	drawValidMove();
-	updateScore()
+}
+
+// Set container size and initialize board on window load.
+window.onload = function () {
+	//
+	resizeAndRedrawBoard()
+	updateScore();
+
+	window.addEventListener("resize", resizeAndRedrawBoard);
 }
 
 // Create and position each cell of the game board.
@@ -43,8 +81,8 @@ function drawGameBoard() {
 			const cell = document.createElement("div");
 
 			cell.style.position = "absolute";
-			cell.style.top = ((cellSize + gap) * row) + gap + "px";
-			cell.style.left = ((cellSize + gap) * column) + gap + "px";
+			cell.style.top = ((cellSize + cellGap) * row) + cellGap + "px";
+			cell.style.left = ((cellSize + cellGap) * column) + cellGap + "px";
 			cell.style.width = cellSize + "px";
 			cell.style.height = cellSize + "px";
 			cell.style.borderRadius = cellBorderRadius + "px";
@@ -74,10 +112,10 @@ function drawCornerMarkers() {
 		const cornerMarker = document.createElement("div");
 
 		cornerMarker.style.position = "absolute";
-		cornerMarker.style.top = ((cellSize + gap) * position.top) - (gap / 2) - 3 + "px";
-		cornerMarker.style.left = ((cellSize + gap) * position.left) - (gap / 2) - 3 + "px";
-		cornerMarker.style.width = "12px";
-		cornerMarker.style.height = "12px";
+		cornerMarker.style.top = ((cellSize + cellGap) * position.top) + (cellGap / 2) - (cornerMarkerSize / 2) + "px";
+		cornerMarker.style.left = ((cellSize + cellGap) * position.left) + (cellGap / 2) - (cornerMarkerSize / 2) + "px";
+		cornerMarker.style.width = cornerMarkerSize + "px";
+		cornerMarker.style.height = cornerMarkerSize + "px";
 		cornerMarker.style.borderRadius = "50%";
 		cornerMarker.style.backgroundColor = "var(--black)";
 
@@ -101,8 +139,8 @@ function drawPieces() {
 				const piece = document.createElement("div");
 
 				piece.style.position = "absolute";
-				piece.style.top = ((cellSize + gap) * row) + gap + 5 + "px";
-				piece.style.left = ((cellSize + gap) * column) + gap + 5 + "px";
+				piece.style.top = ((cellSize + cellGap) * row) + cellGap + 5 + "px";
+				piece.style.left = ((cellSize + cellGap) * column) + cellGap + 5 + "px";
 				piece.style.width = (cellSize - 10) + "px";
 				piece.style.height = (cellSize - 10) + "px";
 
@@ -246,10 +284,10 @@ function drawValidMove() {
 				const validMoveMarker = document.createElement("div");
 
 				validMoveMarker.style.position = "absolute";
-				validMoveMarker.style.top = ((cellSize + gap) * row) + gap + 27.5 + "px";
-				validMoveMarker.style.left = ((cellSize + gap) * column) + gap + 27.5 + "px";
-				validMoveMarker.style.width = (cellSize - 55) + "px";
-				validMoveMarker.style.height = (cellSize - 55) + "px";
+				validMoveMarker.style.top = ((cellSize + cellGap) * row) + cellGap + (cellSize / 2) - (validMoveMarkerSize / 2) + "px";
+				validMoveMarker.style.left = ((cellSize + cellGap) * column) + cellGap + (cellSize / 2) - (validMoveMarkerSize / 2) + "px";
+				validMoveMarker.style.width = validMoveMarkerSize + "px";
+				validMoveMarker.style.height = validMoveMarkerSize + "px";
 				validMoveMarker.style.borderRadius = "50%";
 				validMoveMarker.style.cursor = "pointer";
 
@@ -258,11 +296,11 @@ function drawValidMove() {
 				});
 
 				if (playerTurn == 1) {
-					validMoveMarker.style.border = "1.5px solid var(--black)";
+					validMoveMarker.style.border = validMoveMarkerBorderRadius + "px solid var(--black)";
 				}
 
 				if (playerTurn == 2) {
-					validMoveMarker.style.border = "1.5px solid var(--white)";
+					validMoveMarker.style.border = validMoveMarkerBorderRadius + "px solid var(--white)";
 				}
 
 				validMoveLayer.appendChild(validMoveMarker);
