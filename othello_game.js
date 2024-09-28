@@ -1,8 +1,21 @@
+////////// othello_game.js \\\\\\\\\\
+
 // References to game container and layer elements.
 const othelloGameContainer = document.getElementById("othello_game_container");
 const gameBoardLayer = document.getElementById("game_board_layer");
 const piecesLayer = document.getElementById("pieces_layer");
 const validMoveLayer = document.getElementById("valid_move_layer");
+
+// Retrieve the selected game mode from localStorage.
+let selectedMode = localStorage.getItem("selectedMode");
+
+// If no mode is selected, default to "single_player".
+if (!selectedMode) {
+    selectedMode = "single_player";
+}
+
+// Log the selected mode to the console.
+console.log("Selected mode:", selectedMode);
 
 // Variables.
 let cellSize;
