@@ -3,7 +3,7 @@
 // References to game container and layer elements.
 const othelloGameContainer = document.getElementById("othello_game_container");
 const gameBoardLayer = document.getElementById("game_board_layer");
-const piecesLayer = document.getElementById("pieces_layer");
+const discsLayer = document.getElementById("discs_layer");
 const validMoveLayer = document.getElementById("valid_move_layer");
 
 // Retrieve the selected game mode from localStorage.
@@ -28,8 +28,8 @@ let validMoveMarkerBorderRadius;
 // Keeps track of the current player's turn (1: black, 2: white).
 let playerTurn = 1;
 
-// Initial pieces setup (0: empty, 1: black, 2: white).
-let piecesGrid = [
+// Initial discs setup (0: empty, 1: black, 2: white).
+let discsGrid = [
 	[0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0],
@@ -74,7 +74,7 @@ function resizeAndRedrawBoard() {
 	//
 	drawGameBoard();
 	drawCornerMarkers();
-	drawPieces();
+	drawDiscs();
 	drawValidMove();
 }
 
@@ -136,37 +136,37 @@ function drawCornerMarkers() {
 	});
 }
 
-// Draw pieces on the board.
-function drawPieces() {
-	piecesLayer.innerHTML = "";
+// Draw discs on the board.
+function drawDiscs() {
+	discsLayer.innerHTML = "";
 
 	for (let row = 0; row < 8; row++) {
 		for (let column = 0; column < 8; column++) {
-			// Get the state of the piece (0: empty, 1: black, 2: white).
-			const pieceState = piecesGrid[row][column];
+			// Get the state of the disc (0: empty, 1: black, 2: white).
+			const discState = discsGrid[row][column];
 
-			if (pieceState == 0) {
+			if (discState == 0) {
 				continue;
 			}
 			else {
-				const piece = document.createElement("div");
+				const disc = document.createElement("div");
 
-				piece.style.position = "absolute";
-				piece.style.top = ((cellSize + cellGap) * row) + cellGap + 5 + "px";
-				piece.style.left = ((cellSize + cellGap) * column) + cellGap + 5 + "px";
-				piece.style.width = (cellSize - 10) + "px";
-				piece.style.height = (cellSize - 10) + "px";
+				disc.style.position = "absolute";
+				disc.style.top = ((cellSize + cellGap) * row) + cellGap + 5 + "px";
+				disc.style.left = ((cellSize + cellGap) * column) + cellGap + 5 + "px";
+				disc.style.width = (cellSize - 10) + "px";
+				disc.style.height = (cellSize - 10) + "px";
 
-				piece.classList.add("piece");
+				disc.classList.add("disc");
 
-				if (pieceState == 1) {
-					piece.classList.add("black");
+				if (discState == 1) {
+					disc.classList.add("black");
 				}
-				else if (pieceState == 2) {
-					piece.classList.add("white");
+				else if (discState == 2) {
+					disc.classList.add("white");
 				}
 
-				piecesLayer.appendChild(piece);
+				discsLayer.appendChild(disc);
 			}
 		}
 	}
@@ -175,17 +175,17 @@ function drawPieces() {
 // Handle cell click event and toggle player turn.
 function clickedCell(row, column) {
 	// Prevent placing on occupied cell.
-	if (piecesGrid[row][column] != 0) {
+	if (discsGrid[row][column] != 0) {
 		return;
 	}
 
 	// Proceed if the move is valid.
 	if (isValidMove(row, column)) {
-		const affectedPieces = getAffectedPieces(row, column);
-		flipPieces(affectedPieces);
+		const affectedDiscs = getAffectedDiscs(row, column);
+		flipDiscs(affectedDiscs);
 
-		// Place piece for current player.
-		piecesGrid[row][column] = playerTurn;
+		// Place disc for current player.
+		discsGrid[row][column] = playerTurn;
 
 		// Switch player turn.
 		if (playerTurn == 1) {
@@ -196,7 +196,7 @@ function clickedCell(row, column) {
 		}
 	}
 
-	drawPieces();
+	drawDiscs();
 	drawValidMove();
 
 	const scores = updateScore();
@@ -206,9 +206,9 @@ function clickedCell(row, column) {
 
 // Check if the current move is valid.
 function isValidMove(row, column) {
-	const affectedPieces = getAffectedPieces(row, column);
+	const affectedDiscs = getAffectedDiscs(row, column);
 
-	if (affectedPieces.length == 0) {
+	if (affectedDiscs.length == 0) {
 		return false;
 	}
 	else {
@@ -216,8 +216,8 @@ function isValidMove(row, column) {
 	}
 }
 
-// Get pieces affected (to be flipped) by the move.
-function getAffectedPieces(row, column) {
+// Get discs affected (to be flipped) by the move.
+function getAffectedDiscs(row, column) {
 	const directions = [
 		{ rowOffset: -1, columnOffset: 0 },  // Up.
 		{ rowOffset: 0, columnOffset: 1 },   // Right.
@@ -229,32 +229,32 @@ function getAffectedPieces(row, column) {
 		{ rowOffset: 1, columnOffset: -1 }   // Bottom-left diagonal.
 	];
 
-	const affectedPieces = [];
+	const affectedDiscs = [];
 
-	// Check each direction for flippable pieces.
+	// Check each direction for flippable discs.
 	for (let direction of directions) {
 		let couldBeAffected = [];
 		let rowIterator = row + direction.rowOffset;
 		let columnIterator = column + direction.columnOffset;
 
-		// Traverse in the direction until an edge or invalid piece is found.
+		// Traverse in the direction until an edge or invalid disc is found.
 		while (rowIterator >= 0 && rowIterator < 8 && columnIterator >= 0 && columnIterator < 8) {
-			const valueAtPosition = piecesGrid[rowIterator][columnIterator];
+			const valueAtPosition = discsGrid[rowIterator][columnIterator];
 
 			// Empty cell, stop.
 			if (valueAtPosition == 0) {
 				break;
 			}
 
-			// Valid line, flip pieces.
+			// Valid line, flip discs.
 			if (valueAtPosition == playerTurn) {
 				if (couldBeAffected.length > 0) {
-					affectedPieces.push(...couldBeAffected);
+					affectedDiscs.push(...couldBeAffected);
 				}
 				break;
 			}
 
-			// Add opponent piece to list.
+			// Add opponent disc to list.
 			couldBeAffected.push({ row: rowIterator, column: columnIterator });
 
 			// Continue in the same direction.
@@ -263,19 +263,19 @@ function getAffectedPieces(row, column) {
 		}
 	}
 
-	return affectedPieces;
+	return affectedDiscs;
 }
 
-// Flip pieces for the current move.
-function flipPieces(affectedPieces) {
-	for (let i = 0; i < affectedPieces.length; i++) {
-		const piecesPosition = affectedPieces[i];
+// Flip discs for the current move.
+function flipDiscs(affectedDiscs) {
+	for (let i = 0; i < affectedDiscs.length; i++) {
+		const discsPosition = affectedDiscs[i];
 
-		if (piecesGrid[piecesPosition.row][piecesPosition.column] == 1) {
-			piecesGrid[piecesPosition.row][piecesPosition.column] = 2;
+		if (discsGrid[discsPosition.row][discsPosition.column] == 1) {
+			discsGrid[discsPosition.row][discsPosition.column] = 2;
 		}
 		else {
-			piecesGrid[piecesPosition.row][piecesPosition.column] = 1;
+			discsGrid[discsPosition.row][discsPosition.column] = 1;
 		}
 	}
 }
@@ -287,7 +287,7 @@ function drawValidMove() {
 	for (let row = 0; row < 8; row++) {
 		for (let column = 0; column < 8; column++) {
 			const cell = gameBoardLayer.children[row * 8 + column];
-			const valueAtPosition = piecesGrid[row][column];
+			const valueAtPosition = discsGrid[row][column];
 
 			cell.style.cursor = "default";
 
@@ -332,13 +332,13 @@ function updateScore() {
 
 	for (let row = 0; row < 8; row++) {
 		for (let column = 0; column < 8; column++) {
-			const pieceState = piecesGrid[row][column];
+			const discState = discsGrid[row][column];
 
-			if (pieceState == 1) {
-				black += 1; // Count black pieces.
+			if (discState == 1) {
+				black += 1; // Count black discs.
 			}
-			else if (pieceState == 2) {
-				white += 1; // Count white pieces.
+			else if (discState == 2) {
+				white += 1; // Count white discs.
 			}
 		}
 	}
@@ -356,7 +356,7 @@ function gameOver(black, white) {
 
 	for (let row = 0; row < 8; row++) {
 		for (let column = 0; column < 8; column++) {
-			if (piecesGrid[row][column] == 0) {
+			if (discsGrid[row][column] == 0) {
 				if (playerTurn == 1 && isValidMove(row, column)) {
 					blackCanMove = true;
 				}
@@ -371,9 +371,9 @@ function gameOver(black, white) {
 	if (!blackCanMove && !whiteCanMove) {
 		// Determine the winner.
 		if (black > white) {
-			alert("The winner is the player with the black pieces!")
+			alert("The winner is the player with the black discs!")
 		} else if (white > black) {
-			alert("The winner is the player with the white pieces!")
+			alert("The winner is the player with the white discs!")
 		} else {
 			alert("It's a Tie!")
 		}
@@ -384,7 +384,7 @@ function gameOver(black, white) {
 
 // Restart the game to the initial state and redraw the board.
 function restartGame() {
-	piecesGrid = [
+	discsGrid = [
 		[0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0],
@@ -397,7 +397,7 @@ function restartGame() {
 
 	playerTurn = 1;
 
-	drawPieces();
+	drawDiscs();
 	drawValidMove();
 	updateScore();
 }

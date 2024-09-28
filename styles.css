@@ -193,19 +193,19 @@ nav ul li a {
     background-color: var(--black);
 }
 
-.piece {
+.disc {
     width: 65px;
     height: 65px;
     border-radius: 50%;
     box-shadow: 2.5px 2.5px 5px rgba(0, 0, 0, 0.5);
 }
 
-.piece.black {
+.disc.black {
     border: 0.5px solid #3c3c3c;
     background: radial-gradient(circle at 30% 30%, #333333, var(--black) 70%);
 }
 
-.piece.white {
+.disc.white {
     border: 1px solid #c9c9c9;
     background: radial-gradient(circle at 30% 30%, var(--white), #cccccc 70%);
 }
