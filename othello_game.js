@@ -1,4 +1,3 @@
-
 ////////// OTHELLO GAME BEHAVIOR \\\\\\\\\\
 
 // References to game container and layer elements.
@@ -32,6 +31,10 @@ let playerTurn = 1;
 // Flag to indicate if it's AI's turn.
 let isAiTurn = false;
 
+// Variables to store the row and column of the AI's last move.
+let aiLastMoveRow = null;
+let aiLastMoveColumn = null;
+
 // Initial discs setup (0: empty, 1: black, 2: white).
 let discsGrid = [
 	[0, 0, 0, 0, 0, 0, 0, 0],
@@ -42,7 +45,7 @@ let discsGrid = [
 	[0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0],
 	[0, 0, 0, 0, 0, 0, 0, 0]
-]
+];
 
 function updateBoardSize(cellSize) {
 	cellBorderRadius = cellSize / 25;
@@ -61,7 +64,7 @@ function resizeAndRedrawBoard() {
 		cellSize = 40;
 		updateBoardSize(cellSize);
 	} else if (windowWidth <= 768) {
-		cellSize = 55
+		cellSize = 55;
 		updateBoardSize(cellSize);
 	} else if (windowWidth <= 992) {
 		cellSize = 60;
@@ -91,14 +94,13 @@ function resizeAndRedrawBoard() {
 	drawValidMoves();
 }
 
-// Set container size and initialize board on window load.
+// Initialize the game and handle resizing when the window loads.
 window.onload = function () {
-	// Initialize board on window load and handle resize events.
 	resizeAndRedrawBoard();
 	updateScore();
-
+	checkGameStatus();
 	window.addEventListener("resize", resizeAndRedrawBoard);
-}
+};
 
 // Create and position each cell of the game board.
 function drawGameBoard() {
@@ -125,7 +127,7 @@ function drawGameBoard() {
 	}
 }
 
-// Draw corner markers to the the game board.
+// Draw corner markers on the game board.
 function drawCornerMarkers() {
 	const cornerMarkerPositions = [
 		{ top: 2, left: 2 },
@@ -214,22 +216,20 @@ function clickedCell(row, column) {
 		} else if (playerTurn === 2) {
 			playerTurn = 1;
 		}
+
+		// If it's AI's turn, trigger AI move.
+		if (playerTurn === 2 && selectedMode === "single_player") {
+			isAiTurn = true;
+			setTimeout(function () {
+				aiTurn();
+			}, 500); // Delay AI move.
+		}
+
+		drawDiscs();
+		drawValidMoves();
+		updateScore();
+		checkGameStatus();
 	}
-
-	// If it's AI's turn, trigger AI move.
-	if (playerTurn === 2 && selectedMode === "single_player") {
-		isAiTurn = true;
-		setTimeout(function () {
-			aiTurn();
-		}, 500); //
-	}
-
-	drawDiscs();
-	drawValidMoves();
-
-	const scores = updateScore();
-
-	gameOver(scores.black, scores.white);
 }
 
 // Check if the current move is valid.
@@ -375,33 +375,90 @@ function updateScore() {
 	return { black, white };
 }
 
-// Check if the game is over based on available moves and scores.
-function gameOver(black, white) {
-	let blackCanMove = false;
-	let whiteCanMove = false;
-
+// Check if the current player can move.
+function canPlayerMove() {
 	for (let row = 0; row < 8; row++) {
 		for (let column = 0; column < 8; column++) {
-			if (discsGrid[row][column] === 0) {
-				if (playerTurn === 1 && isValidMove(row, column)) {
-					blackCanMove = true;
-				}
-
-				if (playerTurn === 2 && isValidMove(row, column)) {
-					whiteCanMove = true;
-				}
+			if (discsGrid[row][column] === 0 && isValidMove(row, column)) {
+				return true;
 			}
 		}
 	}
+	return false;
+}
 
-	if (!blackCanMove && !whiteCanMove) {
-		// Determine the winner.
-		if (black > white) {
-			alert("The winner is the player with the black discs!");
-		} else if (white > black) {
-			alert("The winner is the player with the white discs!");
+// Check the game status and manage turn transitions or game over scenarios.
+function checkGameStatus() {
+	// Check if the current player can move.
+	let currentPlayerCanMove = canPlayerMove();
+
+	if (currentPlayerCanMove) {
+		// Current player can move, continue the game.
+		drawValidMoves();
+		return;
+	} else {
+		// Current player cannot move, check if the other player can move.
+		let otherPlayer;
+
+		if (playerTurn === 1) {
+			otherPlayer = 2;
 		} else {
-			alert("It's a Tie!");
+			otherPlayer = 1;
+		}
+
+		// Check if the other player can move without changing the playerTurn yet.
+		let originalPlayerTurn = playerTurn;
+		playerTurn = otherPlayer;
+		let otherPlayerCanMove = canPlayerMove();
+
+		if (otherPlayerCanMove) {
+
+			// Other player can move, display message and continue.
+			playerTurn = otherPlayer; // Confirm the change of turn.
+
+			setTimeout(function () {
+				if (originalPlayerTurn === 1) {
+					alert("The player with the ⚫️ discs cannot play and must pass his turn.");
+				} else {
+					alert("The player with the ⚪️ discs cannot play and must pass his turn.");
+				}
+			}, 0);
+
+			drawValidMoves();
+
+			// If it's AI's turn, trigger AI move.
+			if (playerTurn === 2 && selectedMode === "single_player") {
+				isAiTurn = true;
+				setTimeout(function () {
+					aiTurn();
+				}, 500); // Delay AI move.
+			}
+
+			return;
+		} else {
+			// Neither player can move, the game is over.
+			playerTurn = originalPlayerTurn;
+			let scores = updateScore();
+			let black = scores.black;
+			let white = scores.white;
+
+			setTimeout(function () {
+				if (black > white) {
+					alert("The winner is the player with the ⚫️ discs!");
+				} else if (white > black) {
+					alert("The winner is the player with the ⚪️ discs!");
+				} else {
+					alert("It's a Tie!");
+				}
+
+				// Remove "highlighted_disc" class from all discs.
+				let highlightedDiscs = document.querySelectorAll(".highlighted_disc");
+				highlightedDiscs.forEach(function (disc) {
+					disc.classList.remove("highlighted_disc");
+				});
+			}, 0);
+
+			return; // Game over.
 		}
 	}
 }

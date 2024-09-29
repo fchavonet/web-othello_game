@@ -1,9 +1,4 @@
-
 ////////// OTHELLO GAME AI BEHAVIOR \\\\\\\\\\
-
-// Variables to store the row and column of the AI's last move.
-let aiLastMoveRow = null;
-let aiLastMoveColumn = null;
 
 function aiTurn() {
     let validMoves = [];
@@ -39,7 +34,9 @@ function aiTurn() {
     if (validMoves.length === 0) {
         playerTurn = 1;
         isAiTurn = false;
-        drawValidMoves();
+
+        // Check if the game is over or pass the turn.
+        gameOver();
         return;
     }
 
@@ -76,8 +73,8 @@ function aiTurn() {
     drawDiscs();
     drawValidMoves();
 
-    let scores = updateScore();
-    gameOver(scores.black, scores.white);
+    updateScore();
+    checkGameStatus();
 
     isAiTurn = false;
 }
