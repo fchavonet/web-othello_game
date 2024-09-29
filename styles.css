@@ -30,6 +30,7 @@
 body {
     width: 100%;
     height: 100dvh;
+    background-color: var(--black);
 }
 
 main {
@@ -79,7 +80,6 @@ nav {
     justify-content: center;
     align-items: center;
     gap: var(--normal-gap);
-    z-index: 9999;
 }
 
 #logo_container img {
@@ -307,7 +307,6 @@ footer {
         left: -100%;
         width: 100%;
         height: 100%;
-        margin-top: 0.8rem;
         flex-direction: column;
         gap: 50px;
         background-color: rgba(0, 0, 0, 0.8);
@@ -367,6 +366,7 @@ footer {
 
     .score_container {
         flex-direction: row;
+        transform: scale(0.8);
     }
 }
 
@@ -377,6 +377,7 @@ footer {
         border-radius: 6px;
         box-shadow: 15px 15px 22px 0 rgba(0, 0, 0, 0.5);
     }
+
 }
 
 /* Horizontal screen */
