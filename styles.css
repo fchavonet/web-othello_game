@@ -69,6 +69,7 @@ nav {
     justify-content: center;
     align-items: center;
     gap: var(--small-gap);
+    z-index: 999;
 }
 
 /* Othello Game logo  */
@@ -163,6 +164,50 @@ nav {
     transform: scale(1.1);
 }
 
+/* Hamburger button */
+#hamburger_icon {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    display: none;
+    cursor: pointer;
+    z-index: 9999;
+}
+
+.bar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    border-radius: 2.5px;
+    background-color: var(--white);
+    transform: translate(-50%, -50%);
+}
+
+#hamburger_icon .bar:nth-last-child(1) {
+    top: 25%;
+}
+
+#hamburger_icon .bar:nth-last-child(3) {
+    top: 75%;
+}
+
+/* Hamburger button animation */
+#hamburger_icon.active .bar:nth-last-child(1) {
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+#hamburger_icon.active .bar:nth-last-child(2) {
+    opacity: 0;
+}
+
+#hamburger_icon.active .bar:nth-last-child(3) {
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
 /********** OTHELLO GAME **********/
 /* Game board */
 #othello_game_board_border {
@@ -227,8 +272,8 @@ nav {
     align-items: center;
     gap: var(--normal-gap);
     text-transform: uppercase;
-    border: 1px solid var(--lightgray);
-    border-radius: 2rem;
+    /* border: 1px solid var(--lightgray);
+    border-radius: 2rem; */
 }
 
 .score {
@@ -247,4 +292,120 @@ footer {
     align-items: center;
     color: var(--white);
     background-color: var(--black);
+}
+
+/********** RESPONSIVE DESIGN **********/
+/* Extra large */
+@media (max-width: 1200px) {
+    #hamburger_icon {
+        display: block;
+    }
+
+    nav {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        margin-top: 0.8rem;
+        flex-direction: column;
+        gap: 50px;
+        background-color: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+        transition: all 0.3s ease-in-out;
+    }
+
+    nav.active {
+        left: 0px;
+    }
+
+    nav span {
+        display: none;
+    }
+
+    #informations_menu_container {
+        gap: 50px;
+        font-size: 2rem;
+        flex-direction: column;
+    }
+
+    #game_mode_menu_container {
+        width: 100%;
+        gap: 25px;
+        font-size: 2rem;
+        border-radius: 0;
+        flex-direction: column;
+    }
+
+    #restart_button img {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+/* Large */
+@media (max-width: 992px) {
+    #othello_game_board_border {
+        border: 13px solid var(--black);
+        border-radius: 9px;
+        box-shadow: 23px 23px 33px 0 rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* Medium */
+@media (max-width: 768px) {
+    main {
+        flex-direction: column;
+    }
+
+    #othello_game_board_border {
+        border: 12px solid var(--black);
+        border-radius: 8px;
+        box-shadow: 21px 21px 30px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    .score_container {
+        flex-direction: row;
+    }
+}
+
+/* Small */
+@media (max-width: 576px) {
+    #othello_game_board_border {
+        border: 7px solid var(--black);
+        border-radius: 6px;
+        box-shadow: 15px 15px 22px 0 rgba(0, 0, 0, 0.5);
+    }
+}
+
+/* Horizontal screen */
+@media (max-height: 400px) {
+    main {
+        flex-direction: row;
+    }
+
+    nav {
+        gap: 5px;
+    }
+
+    #informations_menu_container {
+        gap: 5px;
+        font-size: 1.5rem;
+    }
+
+    #game_mode_menu_container {
+        gap: 5px;
+        font-size: 1.5rem;
+    }
+
+    #othello_game_board_border {
+        border: 5.5px solid var(--black);
+        border-radius: 4px;
+        box-shadow: 10px 10px 14px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    .score_container {
+        transform: scale(0.8);
+    }
 }

@@ -1,12 +1,13 @@
 
 ////////// GAME MODE MENU BEHAVIOR \\\\\\\\\\
-document.addEventListener("DOMContentLoaded", function () {
+
+document.addEventListener("DOMContentLoaded", () => {
     const gameModeButtons = document.querySelectorAll('input[name="game_mode_button"]');
     const pagePath = window.location.pathname;
 
     // Add event listeners to each game mode button.
     gameModeButtons.forEach(function (changeMode) {
-        changeMode.addEventListener("change", function () {
+        changeMode.addEventListener("change", () => {
             const selectedMode = this.id;
 
             // Save the selected mode to localStorage.
@@ -40,4 +41,14 @@ document.addEventListener("DOMContentLoaded", function () {
             selectedGameModeButton.checked = true;
         }
     }
+});
+
+////////// HAMBURGER BUTTON BEHAVIOR \\\\\\\\\\
+
+const nav = document.querySelector("nav");
+const hamburgerIcon = document.querySelector("#hamburger_icon");
+
+hamburgerIcon.addEventListener("click", () => {
+    nav.classList.toggle("active");
+    hamburgerIcon.classList.toggle("active");
 });

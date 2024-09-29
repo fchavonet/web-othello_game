@@ -1,4 +1,6 @@
 
+////////// OTHELLO GAME BEHAVIOR \\\\\\\\\\
+
 // References to game container and layer elements.
 const othelloGameContainer = document.getElementById("othello_game_container");
 const gameBoardLayer = document.getElementById("game_board_layer");
@@ -49,17 +51,29 @@ function updateBoardSize(cellSize) {
 
 function resizeAndRedrawBoard() {
 	const windowWidth = window.innerWidth;
+	const windowHeight = window.innerHeight;
 
-	if (windowWidth < 576) {
-		cellSize = 35;
+	//
+	if (windowWidth <= 576) {
+		cellSize = 40;
 		updateBoardSize(cellSize);
 	}
-	else if (windowWidth < 768) {
-		cellSize = 50
+	else if (windowWidth <= 768) {
+		cellSize = 55
+		updateBoardSize(cellSize);
+	}
+	else if (windowWidth <= 992) {
+		cellSize = 60;
 		updateBoardSize(cellSize);
 	}
 	else {
 		cellSize = 65;
+		updateBoardSize(cellSize);
+	}
+
+	//
+	if (windowHeight <= 400) {
+		cellSize = 25;
 		updateBoardSize(cellSize);
 	}
 
