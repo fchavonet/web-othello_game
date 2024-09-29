@@ -12,7 +12,7 @@ let selectedMode = localStorage.getItem("selectedMode");
 
 // If no mode is selected, default to "single_player".
 if (!selectedMode) {
-    selectedMode = "single_player";
+	selectedMode = "single_player";
 }
 
 // Log the selected mode to the console.
@@ -28,6 +28,9 @@ let validMoveMarkerBorderRadius;
 
 // Keeps track of the current player's turn (1: black, 2: white).
 let playerTurn = 1;
+
+// Flag to indicate if it's AI's turn.
+let isAiTurn = false;
 
 // Initial discs setup (0: empty, 1: black, 2: white).
 let discsGrid = [
@@ -53,48 +56,45 @@ function resizeAndRedrawBoard() {
 	const windowWidth = window.innerWidth;
 	const windowHeight = window.innerHeight;
 
-	//
+	// Adjust cell size based on screen width.
 	if (windowWidth <= 576) {
 		cellSize = 40;
 		updateBoardSize(cellSize);
-	}
-	else if (windowWidth <= 768) {
+	} else if (windowWidth <= 768) {
 		cellSize = 55
 		updateBoardSize(cellSize);
-	}
-	else if (windowWidth <= 992) {
+	} else if (windowWidth <= 992) {
 		cellSize = 60;
 		updateBoardSize(cellSize);
-	}
-	else {
+	} else {
 		cellSize = 65;
 		updateBoardSize(cellSize);
 	}
 
-	//
+	// Adjust cell size based on screen height.
 	if (windowHeight <= 400) {
 		cellSize = 25;
 		updateBoardSize(cellSize);
 	}
 
-	//
+	// Update container dimensions.
 	othelloGameContainer.style.minWidth = (cellSize * 8) + (cellGap * 9) + "px";
 	othelloGameContainer.style.minHeight = (cellSize * 8) + (cellGap * 9) + "px";
 
-	//
-	gameBoardLayer.innerHTML = ""
+	// Clear existing board.
+	gameBoardLayer.innerHTML = "";
 
-	//
+	// Redraw board elements.
 	drawGameBoard();
 	drawCornerMarkers();
 	drawDiscs();
-	drawValidMove();
+	drawValidMoves();
 }
 
 // Set container size and initialize board on window load.
 window.onload = function () {
-	//
-	resizeAndRedrawBoard()
+	// Initialize board on window load and handle resize events.
+	resizeAndRedrawBoard();
 	updateScore();
 
 	window.addEventListener("resize", resizeAndRedrawBoard);
@@ -134,7 +134,7 @@ function drawCornerMarkers() {
 		{ top: 6, left: 6 }
 	];
 
-	cornerMarkerPositions.forEach(position => {
+	cornerMarkerPositions.forEach(function (position) {
 		const cornerMarker = document.createElement("div");
 
 		cornerMarker.style.position = "absolute";
@@ -158,10 +158,9 @@ function drawDiscs() {
 			// Get the state of the disc (0: empty, 1: black, 2: white).
 			const discState = discsGrid[row][column];
 
-			if (discState == 0) {
+			if (discState === 0) {
 				continue;
-			}
-			else {
+			} else {
 				const disc = document.createElement("div");
 
 				disc.style.position = "absolute";
@@ -172,11 +171,15 @@ function drawDiscs() {
 
 				disc.classList.add("disc");
 
-				if (discState == 1) {
+				if (discState === 1) {
 					disc.classList.add("black");
-				}
-				else if (discState == 2) {
+				} else if (discState === 2) {
 					disc.classList.add("white");
+				}
+
+				// Highlight the last move made by AI.
+				if (row === aiLastMoveRow && column === aiLastMoveColumn) {
+					disc.classList.add("highlighted_disc");
 				}
 
 				discsLayer.appendChild(disc);
@@ -192,6 +195,11 @@ function clickedCell(row, column) {
 		return;
 	}
 
+	// Prevent clicking when it's AI's turn.
+	if (isAiTurn) {
+		return;
+	}
+
 	// Proceed if the move is valid.
 	if (isValidMove(row, column)) {
 		const affectedDiscs = getAffectedDiscs(row, column);
@@ -201,16 +209,23 @@ function clickedCell(row, column) {
 		discsGrid[row][column] = playerTurn;
 
 		// Switch player turn.
-		if (playerTurn == 1) {
+		if (playerTurn === 1) {
 			playerTurn = 2;
-		}
-		else if (playerTurn == 2) {
+		} else if (playerTurn === 2) {
 			playerTurn = 1;
 		}
 	}
 
+	// If it's AI's turn, trigger AI move.
+	if (playerTurn === 2 && selectedMode === "single_player") {
+		isAiTurn = true;
+		setTimeout(function () {
+			aiTurn();
+		}, 500); //
+	}
+
 	drawDiscs();
-	drawValidMove();
+	drawValidMoves();
 
 	const scores = updateScore();
 
@@ -221,10 +236,9 @@ function clickedCell(row, column) {
 function isValidMove(row, column) {
 	const affectedDiscs = getAffectedDiscs(row, column);
 
-	if (affectedDiscs.length == 0) {
+	if (affectedDiscs.length === 0) {
 		return false;
-	}
-	else {
+	} else {
 		return true;
 	}
 }
@@ -245,7 +259,8 @@ function getAffectedDiscs(row, column) {
 	const affectedDiscs = [];
 
 	// Check each direction for flippable discs.
-	for (let direction of directions) {
+	for (let i = 0; i < directions.length; i++) {
+		const direction = directions[i];
 		let couldBeAffected = [];
 		let rowIterator = row + direction.rowOffset;
 		let columnIterator = column + direction.columnOffset;
@@ -255,12 +270,12 @@ function getAffectedDiscs(row, column) {
 			const valueAtPosition = discsGrid[rowIterator][columnIterator];
 
 			// Empty cell, stop.
-			if (valueAtPosition == 0) {
+			if (valueAtPosition === 0) {
 				break;
 			}
 
 			// Valid line, flip discs.
-			if (valueAtPosition == playerTurn) {
+			if (valueAtPosition === playerTurn) {
 				if (couldBeAffected.length > 0) {
 					affectedDiscs.push(...couldBeAffected);
 				}
@@ -284,17 +299,16 @@ function flipDiscs(affectedDiscs) {
 	for (let i = 0; i < affectedDiscs.length; i++) {
 		const discsPosition = affectedDiscs[i];
 
-		if (discsGrid[discsPosition.row][discsPosition.column] == 1) {
+		if (discsGrid[discsPosition.row][discsPosition.column] === 1) {
 			discsGrid[discsPosition.row][discsPosition.column] = 2;
-		}
-		else {
+		} else {
 			discsGrid[discsPosition.row][discsPosition.column] = 1;
 		}
 	}
 }
 
 // Highlight valid moves for the current player.
-function drawValidMove() {
+function drawValidMoves() {
 	validMoveLayer.innerHTML = "";
 
 	for (let row = 0; row < 8; row++) {
@@ -304,7 +318,7 @@ function drawValidMove() {
 
 			cell.style.cursor = "default";
 
-			if (valueAtPosition == 0 && isValidMove(row, column)) {
+			if (valueAtPosition === 0 && isValidMove(row, column)) {
 				cell.style.cursor = "pointer";
 
 				const validMoveMarker = document.createElement("div");
@@ -321,11 +335,11 @@ function drawValidMove() {
 					clickedCell(row, column);
 				});
 
-				if (playerTurn == 1) {
+				if (playerTurn === 1) {
 					validMoveMarker.style.border = validMoveMarkerBorderRadius + "px solid var(--black)";
 				}
 
-				if (playerTurn == 2) {
+				if (playerTurn === 2) {
 					validMoveMarker.style.border = validMoveMarkerBorderRadius + "px solid var(--white)";
 				}
 
@@ -347,10 +361,9 @@ function updateScore() {
 		for (let column = 0; column < 8; column++) {
 			const discState = discsGrid[row][column];
 
-			if (discState == 1) {
+			if (discState === 1) {
 				black += 1; // Count black discs.
-			}
-			else if (discState == 2) {
+			} else if (discState === 2) {
 				white += 1; // Count white discs.
 			}
 		}
@@ -359,7 +372,7 @@ function updateScore() {
 	blackScore.innerHTML = black;
 	whiteScore.innerHTML = white;
 
-	return { black, white }
+	return { black, white };
 }
 
 // Check if the game is over based on available moves and scores.
@@ -369,12 +382,12 @@ function gameOver(black, white) {
 
 	for (let row = 0; row < 8; row++) {
 		for (let column = 0; column < 8; column++) {
-			if (discsGrid[row][column] == 0) {
-				if (playerTurn == 1 && isValidMove(row, column)) {
+			if (discsGrid[row][column] === 0) {
+				if (playerTurn === 1 && isValidMove(row, column)) {
 					blackCanMove = true;
 				}
 
-				if (playerTurn == 2 && isValidMove(row, column)) {
+				if (playerTurn === 2 && isValidMove(row, column)) {
 					whiteCanMove = true;
 				}
 			}
@@ -384,14 +397,12 @@ function gameOver(black, white) {
 	if (!blackCanMove && !whiteCanMove) {
 		// Determine the winner.
 		if (black > white) {
-			alert("The winner is the player with the black discs!")
+			alert("The winner is the player with the black discs!");
 		} else if (white > black) {
-			alert("The winner is the player with the white discs!")
+			alert("The winner is the player with the white discs!");
 		} else {
-			alert("It's a Tie!")
+			alert("It's a Tie!");
 		}
-
-		restartGame();
 	}
 }
 
@@ -409,8 +420,10 @@ function restartGame() {
 	];
 
 	playerTurn = 1;
+	aiLastMoveRow = null;
+	aiLastMoveColumn = null;
 
 	drawDiscs();
-	drawValidMove();
+	drawValidMoves();
 	updateScore();
 }
