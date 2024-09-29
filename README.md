@@ -25,20 +25,17 @@
 
 ## 📄 <span id="description">Description</span>
 
-This project is a browser-based implementation of the classic Othello (also known as Reversi) board game. The game is designed using HTML5, CSS3, and JavaScript. Players take turns placing black or white pieces on the board, flipping the opponent's pieces by surrounding them in a straight line. The game continues until neither player can make a valid move, and the player with the most pieces on the board wins.
-
-Please note that, for now, the game is only playable in a local two-player mode, where players take turns on the same device.
+This project is a browser-based implementation of the classic Othello (also known as Reversi) board game. The game is designed using HTML5, CSS3, and JavaScript. Players take turns placing black or white discs on the board, flipping the opponent's discs by surrounding them in a straight line. The game continues until neither player can make a valid move, and the player with the most discs on the board wins.
 
 ## 🎓 <span id="objectives">Objectives</span>
 
 The primary goal of this project is to create a playable version of Othello with a functional UI and game logic. The focus is on:
 
-- Implementing the core game mechanics (player turns, piece placement, and flipping).
 - Rendering a dynamic game board with valid moves highlighted.
+- Implementing the core game mechanics (player turns, disc placement, and flipping).
 - Allowing users to restart the game, track scores, and determine the winner.
+- Developing a simple algorithm to enable solo gameplay against the computer.
 - Enhancing skills in HTML, CSS, and JavaScript while building a complete interactive game.
-
-
 
 ## 🔨 <span id="tech-stack">Tech stack</span>
 
@@ -54,9 +51,12 @@ The primary goal of this project is to create a playable version of Othello with
 | :---------------: | ------------------------------------------------------------- |
 | `resources`       | Contains the resources required for the repository.           |
 | `README.md`       | The readme file you are currently reading 😉.                 |
+| `about.html`      | Provides information about the Othello Game.                  |
 | `behavior.js`     | JavaScript code for dynamic page interactions and animations. |
 | `index.html`      | Main HTML file for the Othello Game.                          |
+| `othello_ai.js`   | Contains the logic for the Othello Game AI.                   |
 | `othello_game.js` | Contains the core game logic for the Othello Game.            |
+| `rules.html`      | Contains the rules for playing the Othello Game.              |
 | `styles.css`      | CSS stylesheet for the Othello Game layout.                   |
 
 ## 💻 <span id="installation_and_how_to_use">Installation and how to use</span>
@@ -78,13 +78,13 @@ git clone https://github.com/fchavonet/web-othello_game.git
 
 **How to use:**
 
-1. Once the page is open, the game board will be displayed with an initial setup of pieces.
+1. Once the page is open, the game board will be displayed with an initial setup of discs.
 
-2. Players take turns clicking on empty cells to place their pieces. Valid moves will be highlighted.
+2. Players take turns clicking on empty cells to place their discs. Valid moves will be highlighted.
 
-3. The score is automatically updated as pieces are placed.
-
-4. Press the "Restart" button at the top-right to reset the game at any time.
+3. The score is automatically updated as discs are placed.
+"
+4. Press the <img width="10px" src="./resources/images/icon-restart.png" alt="Restart icon"> button at the top-right to reset the game at any time.
 
 You can also test the game online by clicking [here](https://fchavonet.github.io/web-othello_game/).
 
@@ -94,16 +94,16 @@ You can also test the game online by clicking [here](https://fchavonet.github.io
 
 ## 🔧 <span id="whats-next">What's next ?</span>
 
-- Create a game rules page.
-- Add an "About" page with the history of Othello Game.
-- Implement piece-flipping animations.
+- Implement disc-flipping animations.
+- Complete the about page.
+- Complete the game rules page.
 - Improve the overall user interface (UI).
 - Add a login system.
 - Create an online multiplayer mode.
 - Implement a score tracking system with player login.
 - Add the ability to save games.
 - Enable replays of previous games.
-- Introduce an AI opponent (with the help of <a href="https://github.com/Eonvorax">Eonvorax</a> specializing in machine learning).
+- Introduce a reel AI opponent (with the help of <a href="https://github.com/Eonvorax">Eonvorax</a> specializing in machine learning).
 
 ## ♥️ <span id="thanks">Thanks</span>
 
