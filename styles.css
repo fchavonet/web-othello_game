@@ -1,11 +1,14 @@
 /********** VARIABLES **********/
 :root {
-    --header_height: 75px;
-    --footer_height: 50px;
-    --gap: 25px;
+    --header_height: 5rem;
+    --footer_height: 3.5rem;
+    --small-gap: 1rem;
+    --normal-gap: 2rem;
     --black: #000000;
     --white: #ffffff;
+    --lightgray: #dadada;
     --green: #008a61;
+    --gold: #ffd700;
     --background_color: #f0f0f0;
 }
 
@@ -19,6 +22,7 @@
     font-family: monospace;
     font-size: 1em;
     list-style: none;
+    text-decoration: none;
     scroll-behavior: smooth;
 }
 
@@ -42,20 +46,15 @@ h1 {
     font-size: 2.5rem;
 }
 
-/* General responsive */
-@media (max-width: 768px) {
-    main {
-        flex-direction: column;
-        justify-content: center;
-    }
+a:hover {
+    text-decoration: underline;
 }
 
 /********** HEADER **********/
-
 header {
     width: 100%;
     height: var(--header_height);
-    padding: 0 25px;
+    padding: 0 2rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -64,13 +63,22 @@ header {
     background-color: var(--black);
 }
 
-/* Logo */
+nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: var(--small-gap);
+}
+
+/* Othello Game logo  */
 #logo_container {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: var(--gap);
+    gap: var(--normal-gap);
+    z-index: 9999;
 }
 
 #logo_container img {
@@ -78,58 +86,58 @@ header {
     height: 25px;
 }
 
-/* Navbar */
-nav {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: var(--gap)
-}
-
-nav ul {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: var(--gap);
-}
-
-nav ul li a {
+#logo_container a {
     text-decoration: none;
+    color: var(--white);
+}
+
+/* Informations menu */
+#informations_menu_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: var(--small-gap);
+}
+
+#informations_menu_container li a {
     text-transform: uppercase;
     color: var(--white);
 }
 
-/* Game mode selection menu */
-#radio_buttons_container {
-    padding: 5px;
+/* Game mode menu */
+#game_mode_menu_container {
+    padding: 0.5rem;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    border-radius: 25px;
+    border-radius: 2rem;
     background-color: var(--white);
 }
 
-#radio_buttons_container .radio_button input {
+#game_mode_menu_container .game_mode_button input {
     display: none;
 }
 
-#radio_buttons_container .radio_button span {
-    padding: 5px 10px;
+#game_mode_menu_container .game_mode_button span {
+    padding: 0.5rem 1rem;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    border-radius: 25px;
+    border-radius: 2rem;
     text-transform: uppercase;
-    color: rgb(50, 65, 85);
+    color: var(--black);
     cursor: pointer;
-    transition: all .1s ease-in-out;
 }
 
-#radio_buttons_container .radio_button input:checked+span {
+#game_mode_menu_container .game_mode_button span.disabled_button {
+    color: var(--lightgray);
+    cursor: not-allowed;
+}
+
+#game_mode_menu_container .game_mode_button input:checked+span {
     font-weight: 800;
     color: var(--white);
     background-color: var(--black);
@@ -137,33 +145,27 @@ nav ul li a {
 
 /* Restart button */
 #restart_button {
-    padding: 10px 15px;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     border: none;
-    border-radius: 25px;
-    text-transform: uppercase;
-    color: var(--black);
-    background-color: var(--white);
+    background-color: transparent;
     cursor: pointer;
-    transition: all .1s ease-in-out;
+    transition: all 0.1s ease-in-out;
 }
 
-/* Header responsive */
-@media (max-width: 768px) {
-    header {
-        justify-content: center;
-    }
+#restart_button img {
+    height: 2rem;
+}
 
-    nav {
-        display: none;
-    }
+#restart_button:hover {
+    transform: scale(1.1);
 }
 
 /********** OTHELLO GAME **********/
-#othello_board_border {
+/* Game board */
+#othello_game_board_border {
     border: 15px solid var(--black);
     border-radius: 10px;
     box-shadow: 25px 25px 35px 0 rgba(0, 0, 0, 0.5);
@@ -193,6 +195,7 @@ nav ul li a {
     background-color: var(--black);
 }
 
+/* Discs */
 .disc {
     width: 65px;
     height: 65px;
@@ -210,48 +213,31 @@ nav ul li a {
     background: radial-gradient(circle at 30% 30%, var(--white), #cccccc 70%);
 }
 
+.highlighted_disc {
+    outline: 2px solid var(--gold);
+}
+
+/* Scores */
 .score_container {
-    width: 150px;
-    padding: 25px;
+    width: 175px;
+    height: 250px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: var(--gap);
-    font-size: 1.5rem;
+    gap: var(--normal-gap);
     text-transform: uppercase;
+    border: 1px solid var(--lightgray);
+    border-radius: 2rem;
 }
 
 .score {
     font-size: 5rem;
     font-weight: 900;
-}
-
-/* Othello game responsive */
-@media (max-width: 768px) {
-    #othello_board_border {
-        border: 12.5px solid var(--black);
-        border-radius: 8px;
-        box-shadow: 20px 20px 30px 0 rgba(0, 0, 0, 0.5);
-    }
-
-    .score_container {
-        width: 100%;
-        flex-direction: row-reverse;
-        transform: scale(0.5);
-    }
-}
-
-@media (max-width: 576px) {
-    #othello_board_border {
-        border: 8.75px solid var(--black);
-        border-radius: 5.75px;
-        box-shadow: 15px 15px 20px 0 rgba(0, 0, 0, 0.5);
-    }
+    line-height: 1;
 }
 
 /********** FOOTER **********/
-
 footer {
     width: 100%;
     height: var(--footer_height);

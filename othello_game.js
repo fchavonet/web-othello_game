@@ -1,4 +1,3 @@
-////////// othello_game.js \\\\\\\\\\
 
 // References to game container and layer elements.
 const othelloGameContainer = document.getElementById("othello_game_container");
