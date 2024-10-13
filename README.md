@@ -25,7 +25,7 @@
 
 ## 📄 <span id="description">Description</span>
 
-This project is a browser-based implementation of the classic Othello (also known as Reversi) board game. The game is designed using HTML5, CSS3, and JavaScript. Players take turns placing black or white discs on the board, flipping the opponent's discs by surrounding them in a straight line. The game continues until neither player can make a valid move, and the player with the most discs on the board wins.
+This project, inspired by the [end-of-year work](https://github.com/Rdrg974/holbertonschool-portfolio) of [Rodrigue Hassany Mohamed](https://github.com/Rdrg974) and [Théo Jennat](https://github.com/tjennat) at Holberton School, is a browser-based implementation of the classic Othello (also known as Reversi) board game. The game is designed using HTML5, CSS3, and JavaScript. Players take turns placing black or white discs on the board, flipping the opponent's discs by surrounding them in a straight line. The game continues until neither player can make a valid move, and the player with the most discs on the board wins.
 
 ## 🎓 <span id="objectives">Objectives</span>
 
